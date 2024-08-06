@@ -22,12 +22,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/send-verification-code").permitAll() // 인증 비활성화 엔드포인트
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 )
-               .formLogin(login -> login // 폼 로그인 설정
-                        // .loginPage("/login") // 사용자 정의 로그인 페이지 설정
+                .formLogin(login -> login // 폼 로그인 설정
+                        // .loginPage("/login") // 사용자 정의 로그인 페이지 설정 (구현 시 주석 해제)
                         .defaultSuccessUrl("/home", true) // 로그인 성공 시 리디렉션할 URL 설정
                         .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
                 );
-
 
         return http.build();
     }
@@ -36,4 +40,10 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new CustomUserDetailsService(); // CustomUserDetailsService 클래스 사용
+    }
 }
+
