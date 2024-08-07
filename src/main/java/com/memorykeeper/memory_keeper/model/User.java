@@ -14,6 +14,7 @@ public class User {
     private String password;
     private Integer age;
     private String gender;
+    private String region;
 
     // Getters and Setters
 
@@ -72,4 +73,8 @@ public class User {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public String getRegion() { return region; }
+
+    public void setRegion(String region) { this.region = region; }
 }
