@@ -36,3 +36,14 @@ jobs:
     - name: Upload to S3
       run: aws s3 cp target/my-app-1.0-SNAPSHOT.jar s3://swtooltime-bucket/
       # Adjust the path to match your build artifact and S3 bucket details
+
+    - name: Deploy to CodeDeploy
+      run: |
+        aws deploy create-deployment \
+          --application-name ${{ secrets.CODEDEPLOY_APPLICATION_NAME }} \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=swtooltime-bucket,key=my-app-1.0-SNAPSHOT.jar,bundleType=zip \
+          --region ap-northeast-2
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
