@@ -23,12 +23,14 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // 인증코드 문자 전송
     @PostMapping("/send-verification-code")
     public ResponseEntity<?> sendVerificationCode(@RequestParam String phoneNumber) {
         verificationService.sendVerificationCode(phoneNumber);
         return ResponseEntity.ok("Verification code sent successfully!");
     }
 
+    // 인증코드 검증
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestParam String phoneNumber, @RequestParam String code) {
         boolean isVerified = verificationService.verifyCode(phoneNumber, code);
@@ -39,6 +41,7 @@ public class UserController {
         }
     }
 
+    // 사용자 등록
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user, @RequestParam String code) {
         boolean isVerified = verificationService.verifyCode(user.getPhoneNumber(), code);
