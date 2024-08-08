@@ -29,8 +29,10 @@ public class SecurityConfig {
                                 "/api/users/reset-password-request",
                                 "/api/users/reset-password",
                                 "/api/users/find-username-request",
-                                "/api/users/find-username"
-                        ).permitAll()
+                                "/api/users/find-username",
+                                "/api/dementia-test/submit", // 치매 자가진단 테스트 결과 저장 엔드포인트
+                                "/api/cognitive-training/submit" // 퀴즈 결과 저장 엔드포인트
+                        ).permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 )
                 .formLogin(login -> login // 폼 로그인 설정
