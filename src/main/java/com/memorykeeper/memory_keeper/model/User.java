@@ -1,6 +1,7 @@
 package com.memorykeeper.memory_keeper.model;
 
 import jakarta.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -15,6 +16,8 @@ public class User {
     private Integer age;
     private String gender;
     private String region;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<UserDementiaCenterMapping> dementiaCenters;
 
     // Getters and Setters
 
@@ -77,4 +80,8 @@ public class User {
     public String getRegion() { return region; }
 
     public void setRegion(String region) { this.region = region; }
+
+    public Set<UserDementiaCenterMapping> getDementiaCenters() { return dementiaCenters; }
+
+    public void setDementiaCenters(Set<UserDementiaCenterMapping> dementiaCenters) { this.dementiaCenters = dementiaCenters; }
 }

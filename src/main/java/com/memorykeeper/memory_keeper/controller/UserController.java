@@ -1,5 +1,6 @@
 package com.memorykeeper.memory_keeper.controller;
 
+import com.memorykeeper.memory_keeper.dto.DementiaCenterDTO;
 import com.memorykeeper.memory_keeper.model.User;
 import com.memorykeeper.memory_keeper.repository.UserRepository;
 import com.memorykeeper.memory_keeper.Service.VerificationService;
@@ -8,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -114,5 +117,30 @@ public class UserController {
         User user = optionalUser.get();
         return ResponseEntity.ok("Your username is: " + user.getUsername());
     }
+
+    // 사용자별 매핑된 치매센터 리스트 조회
+    @GetMapping("/{userId}/dementia-centers")
+    public ResponseEntity<List<DementiaCenterDTO>> getDementiaCentersForUser(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 여기서 DTO로 변환
+        List<DementiaCenterDTO> centers = user.getDementiaCenters().stream()
+                .map(mapping -> {
+                    DementiaCenterDTO dto = new DementiaCenterDTO();
+                    dto.setCnterNm(mapping.getDementiaCenter().getCnterNm());
+                    dto.setRdnmadr(mapping.getDementiaCenter().getRdnmadr());
+                    dto.setLnmadr(mapping.getDementiaCenter().getLnmadr());
+                    dto.setLatitude(mapping.getDementiaCenter().getLatitude());
+                    dto.setLongitude(mapping.getDementiaCenter().getLongitude());
+                    dto.setOperPhoneNumber(mapping.getDementiaCenter().getOperPhoneNumber());
+                    dto.setImbcltyIntrcn(mapping.getDementiaCenter().getImbcltyIntrcn());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(centers);
+    }
 }
+
 

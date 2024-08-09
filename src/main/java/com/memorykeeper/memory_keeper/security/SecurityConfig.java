@@ -31,7 +31,9 @@ public class SecurityConfig {
                                 "/api/users/find-username-request",
                                 "/api/users/find-username",
                                 "/api/dementia-test/submit", // 치매 자가진단 테스트 결과 저장 엔드포인트
-                                "/api/cognitive-training/submit" // 퀴즈 결과 저장 엔드포인트
+                                "/api/cognitive-training/submit", // 퀴즈 결과 저장 엔드포인트
+                                "/api/dementia-centers/fetch-and-save", // 치매센터 데이터 수집 엔드포인트
+                                "/api/users/{userId}/dementia-centers" // 사용자별 치매센터 리스트 조회
                         ).permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 )
@@ -67,6 +69,7 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
 
 
 
