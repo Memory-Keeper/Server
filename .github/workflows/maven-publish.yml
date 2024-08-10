@@ -38,7 +38,7 @@ jobs:
         aws-region: ap-northeast-2 # Change to your AWS region
 
     - name: Upload to S3
-      run: aws s3 cp target/memory-keeper-1.0-SNAPSHOT.jar s3://swtooltime-bucket/
+      run: aws s3 cp target/memory-keeper-0.0.1-SNAPSHOT.jar s3://swtooltime-bucket/
       # Adjust the path to match your build artifact and S3 bucket details
 
     - name: Deploy to CodeDeploy
@@ -47,7 +47,7 @@ jobs:
           --application-name ${{ secrets.CODEDEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=swtooltime-bucket,key=memory-keeper-1.0-SNAPSHOT.jar,bundleType=zip \
+          --s3-location bucket=swtooltime-bucket,key=memory-keeper-0.0.1-SNAPSHOT.jar,bundleType=zip \
           --region ap-northeast-2
       env:
         GITHUB_TOKEN: ${{ github.token }}
