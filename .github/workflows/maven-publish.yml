@@ -1,9 +1,9 @@
-name: Maven Package
+name: Maven Package and Deploy
 
 on:
   push:
     branches:
-      - main  # 주 브랜치에 푸시될 때만 실행되도록 설정
+      - main
 
 jobs:
   build:
@@ -21,25 +21,29 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dspring.profiles.active=test
+      run: mvn clean package -Dspring.profiles.active=test
 
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Prepare deployment package
+      run: |
+        mkdir -p deployment-package
+        cp target/memory-keeper-0.0.1-SNAPSHOT.jar deployment-package/
+        cp appspec.yml deployment-package/
+        cp start.sh deployment-package/
+        cd deployment-package
+        zip -r ../deployment-package.zip .
+        cd ..
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2 # Change to your AWS region
+        aws-region: ap-northeast-2
 
     - name: Upload to S3
-      run: aws s3 cp target/memory-keeper-0.0.1-SNAPSHOT.jar s3://swtooltime-bucket/
-      # Adjust the path to match your build artifact and S3 bucket details
+      run: aws s3 cp deployment-package.zip s3://swtooltime-bucket/
 
     - name: Deploy to CodeDeploy
       run: |
@@ -47,7 +51,7 @@ jobs:
           --application-name ${{ secrets.CODEDEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=swtooltime-bucket,key=memory-keeper-0.0.1-SNAPSHOT.jar,bundleType=zip \
+          --s3-location bucket=swtooltime-bucket,key=deployment-package.zip,bundleType=zip \
           --region ap-northeast-2
       env:
         GITHUB_TOKEN: ${{ github.token }}
