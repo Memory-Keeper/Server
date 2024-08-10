@@ -1,8 +1,9 @@
 name: Maven Package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - main  # 주 브랜치에 푸시될 때만 실행되도록 설정
 
 jobs:
   build:
