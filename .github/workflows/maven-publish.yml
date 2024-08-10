@@ -1,4 +1,4 @@
-name: Maven Package and Deploy
+name: Maven Package
 
 on:
   push:
@@ -21,19 +21,23 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        server-id: github
+        settings-path: ${{ github.workspace }}
 
     - name: Build with Maven
-      run: mvn clean package -Dspring.profiles.active=test
+      run: mvn -B package --file pom.xml -Dspring.profiles.active=test
 
-    - name: Prepare deployment package
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
+    - name: Create deployment package
       run: |
-        mkdir -p deployment-package
-        cp target/memory-keeper-0.0.1-SNAPSHOT.jar deployment-package/
-        cp appspec.yml deployment-package/
-        cp start.sh deployment-package/
-        cd deployment-package
-        zip -r ../deployment-package.zip .
-        cd ..
+        mkdir -p deploy/scripts
+        cp appspec.yml deploy/
+        cp scripts/*.sh deploy/scripts/
+        cp target/memory-keeper-0.0.1-SNAPSHOT.jar deploy/
+        cd deploy && zip -r ../deploy-package.zip .
+      shell: bash
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -43,7 +47,7 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: Upload to S3
-      run: aws s3 cp deployment-package.zip s3://swtooltime-bucket/
+      run: aws s3 cp deploy-package.zip s3://swtooltime-bucket/
 
     - name: Deploy to CodeDeploy
       run: |
@@ -51,7 +55,7 @@ jobs:
           --application-name ${{ secrets.CODEDEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.OneAtATime \
           --deployment-group-name ${{ secrets.CODEDEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=swtooltime-bucket,key=deployment-package.zip,bundleType=zip \
+          --s3-location bucket=swtooltime-bucket,key=deploy-package.zip,bundleType=zip \
           --region ap-northeast-2
       env:
         GITHUB_TOKEN: ${{ github.token }}
