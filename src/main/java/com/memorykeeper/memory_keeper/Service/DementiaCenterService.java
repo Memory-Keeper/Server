@@ -147,6 +147,3 @@ public class DementiaCenterService {
         }
     }
 }
-
-
-

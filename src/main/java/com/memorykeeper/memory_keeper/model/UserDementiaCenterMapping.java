@@ -44,3 +44,4 @@ public class UserDementiaCenterMapping {
         this.dementiaCenter = dementiaCenter;
     }
 }
+

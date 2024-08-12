@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 
 @Entity
 public class DementiaTestResult {
@@ -15,6 +16,10 @@ public class DementiaTestResult {
     private String username;
     private int score;
     private boolean isDementiaSuspected;
+
+    // 새 필드 추가
+    private int testAttempt; // 시행 회차
+    private LocalDate testDate; // 시행 날짜
 
     // Getters and Setters
     public Long getId() {
@@ -47,5 +52,21 @@ public class DementiaTestResult {
 
     public void setDementiaSuspected(boolean dementiaSuspected) {
         isDementiaSuspected = dementiaSuspected;
+    }
+
+    public int getTestAttempt() {
+        return testAttempt;
+    }
+
+    public void setTestAttempt(int testAttempt) {
+        this.testAttempt = testAttempt;
+    }
+
+    public LocalDate getTestDate() {
+        return testDate;
+    }
+
+    public void setTestDate(LocalDate testDate) {
+        this.testDate = testDate;
     }
 }

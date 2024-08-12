@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 
 @Entity
 public class CognitiveTrainingResult {
@@ -21,6 +22,8 @@ public class CognitiveTrainingResult {
     private int orientationScore;
     private int totalScore;
     private double percentile;
+    private int quizAttempt;
+    private LocalDate quizDate;
 
     // Getters and Setters
     public Long getId() {
@@ -102,4 +105,21 @@ public class CognitiveTrainingResult {
     public void setPercentile(double percentile) {
         this.percentile = percentile;
     }
+
+    public int getQuizAttempt() {
+        return quizAttempt;
+    }
+
+    public void setQuizAttempt(int quizAttempt) {
+        this.quizAttempt = quizAttempt;
+    }
+
+    public LocalDate getQuizDate() {
+        return quizDate;
+    }
+
+    public void setQuizDate(LocalDate quizDate) {
+        this.quizDate = quizDate;
+    }
 }
+
