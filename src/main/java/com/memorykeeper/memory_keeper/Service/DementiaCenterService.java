@@ -140,6 +140,13 @@ public class DementiaCenterService {
 
     private void saveCentersForUser(User user, List<DementiaCenter> centers) {
         for (DementiaCenter center : centers) {
+            boolean mappingExists = userDementiaCenterMappingRepository.existsByUserIdAndDementiaCenterId(user.getId(), center.getId());
+
+            if (mappingExists) {
+                // 이미 매핑 정보가 존재하면 추가하지 않음
+                continue;
+            }
+
             UserDementiaCenterMapping mapping = new UserDementiaCenterMapping();
             mapping.setUser(user);
             mapping.setDementiaCenter(center);
