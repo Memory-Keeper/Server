@@ -11,9 +11,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +50,7 @@ public class SecurityConfig {
                 )
                 .formLogin(login -> login
                         //.loginPage("/login") // 사용자 정의 로그인 페이지 설정 (구현 시 주석 해제)
-                        .defaultSuccessUrl("/home", true)
+                        .successHandler(authenticationSuccessHandler()) // 로그인 성공 시 JSON 응답 반환
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -54,6 +60,23 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("statusCode", HttpServletResponse.SC_OK);
+            data.put("message", "Login successful");
+            data.put("result", authentication.getName());
+            data.put("timestamp", LocalDateTime.now().toString());
+
+            response.getWriter().write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data));
+        };
     }
 
     // CORS 설정을 위한 CorsConfigurationSource 빈 추가
@@ -89,4 +112,5 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
 
