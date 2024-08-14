@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -51,6 +52,7 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         //.loginPage("/login") // 사용자 정의 로그인 페이지 설정 (구현 시 주석 해제)
                         .successHandler(authenticationSuccessHandler()) // 로그인 성공 시 JSON 응답 반환
+                        .failureHandler(authenticationFailureHandler()) // 로그인 실패 시 JSON 응답 반환
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -73,6 +75,22 @@ public class SecurityConfig {
             data.put("statusCode", HttpServletResponse.SC_OK);
             data.put("message", "Login successful");
             data.put("result", authentication.getName());
+            data.put("timestamp", LocalDateTime.now().toString());
+
+            response.getWriter().write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data));
+        };
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return (request, response, exception) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("statusCode", HttpServletResponse.SC_UNAUTHORIZED);
+            data.put("message", "Login failed: " + exception.getMessage());
             data.put("timestamp", LocalDateTime.now().toString());
 
             response.getWriter().write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data));
@@ -112,5 +130,6 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
 
 
