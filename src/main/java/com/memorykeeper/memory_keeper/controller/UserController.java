@@ -47,15 +47,26 @@ public class UserController {
     // 사용자 등록
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user, @RequestParam String code) {
+        // Username 중복 체크
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return ResponseEntity.status(409).body("Username already exists.");
+        }
+
+        // 인증 코드 검증
         boolean isVerified = verificationService.verifyCode(user.getPhoneNumber(), code);
         if (!isVerified) {
             return ResponseEntity.status(400).body("Invalid or expired verification code.");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
+        // 비밀번호 암호화
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 사용자 저장
         userRepository.save(user);
+
         return ResponseEntity.ok("User registered successfully!");
     }
+
 
     // 비밀번호 재설정 요청 (인증 코드 전송)
     @PostMapping("/reset-password-request")
