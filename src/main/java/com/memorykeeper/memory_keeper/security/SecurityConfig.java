@@ -1,5 +1,6 @@
 package com.memorykeeper.memory_keeper.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,6 +27,12 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,8 +57,8 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .formLogin(login -> login
-                        //.loginPage("/login") // 사용자 정의 로그인 페이지 설정 (구현 시 주석 해제)
                         .successHandler(authenticationSuccessHandler()) // 로그인 성공 시 JSON 응답 반환
                         .failureHandler(authenticationFailureHandler()) // 로그인 실패 시 JSON 응답 반환
                         .permitAll()
@@ -65,16 +73,24 @@ public class SecurityConfig {
     }
 
     @Bean
+    public JwtRequestFilter jwtRequestFilter() {
+        return new JwtRequestFilter(userDetailsService, jwtTokenUtil);
+    }
+
+    @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
+            // 로그인 성공 시 JWT 토큰 생성
+            String token = jwtTokenUtil.generateToken(authentication.getName());
+
             Map<String, Object> data = new HashMap<>();
             data.put("statusCode", HttpServletResponse.SC_OK);
             data.put("message", "Login successful");
-            data.put("result", authentication.getName());
+            data.put("token", token);  // JWT 토큰 응답에 포함
             data.put("timestamp", LocalDateTime.now().toString());
 
             response.getWriter().write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data));
@@ -130,6 +146,9 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
+
+
 
 
 
