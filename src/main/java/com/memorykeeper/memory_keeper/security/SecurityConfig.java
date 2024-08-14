@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -20,8 +23,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
                 .authorizeHttpRequests(authorize -> authorize
-                        // 인증을 비활성화 할 엔드포인트들
                         .requestMatchers(
                                 "/api/users/send-verification-code",
                                 "/api/users/verify-code",
@@ -36,12 +39,12 @@ public class SecurityConfig {
                                 "/api/cognitive-training/user/**", // 사용자별 퀴즈 결과 조회 엔드포인트 추가
                                 "/api/dementia-centers/fetch-and-save", // 치매센터 데이터 수집 엔드포인트
                                 "/api/users/{userId}/dementia-centers" // 사용자별 치매센터 리스트 조회
-                        ).permitAll() // 인증 없이 접근 허용
-                        .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(login -> login // 폼 로그인 설정
+                .formLogin(login -> login
                         //.loginPage("/login") // 사용자 정의 로그인 페이지 설정 (구현 시 주석 해제)
-                        .defaultSuccessUrl("/home", true) // 로그인 성공 시 리디렉션할 URL 설정
+                        .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -51,6 +54,19 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    // CORS 설정을 위한 CorsConfigurationSource 빈 추가
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); // 모든 도메인 허용
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -71,6 +87,8 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
+
 
 
 
