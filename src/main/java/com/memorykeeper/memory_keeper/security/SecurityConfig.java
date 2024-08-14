@@ -87,15 +87,24 @@ public class SecurityConfig {
             // 로그인 성공 시 JWT 토큰 생성
             String token = jwtTokenUtil.generateToken(authentication.getName());
 
+            // CustomUserDetails로 캐스팅
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            Long userId = userDetails.getId();
+
+            // 사용자 ID와 Username을 반환 데이터에 포함
             Map<String, Object> data = new HashMap<>();
             data.put("statusCode", HttpServletResponse.SC_OK);
             data.put("message", "Login successful");
             data.put("token", token);  // JWT 토큰 응답에 포함
+            data.put("username", username); // username 추가
+            data.put("userId", userId); // userId 추가
             data.put("timestamp", LocalDateTime.now().toString());
 
             response.getWriter().write(new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(data));
         };
     }
+
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
@@ -146,6 +155,7 @@ public class SecurityConfig {
         return authProvider;
     }
 }
+
 
 
 
