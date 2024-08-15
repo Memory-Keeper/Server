@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
+                                "/generate-cognitive-quiz-from-json",
                                 "/api/users/send-verification-code",
                                 "/api/users/verify-code",
                                 "/api/users/register",

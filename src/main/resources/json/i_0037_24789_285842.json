@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 24789,
+        "abs_no": 285842,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 300,
+        "abs_height": 300,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_37/i_0037_24789_285842.png",
+        "abs_bbox": "[37,42.875,237,221]",
+        "object_scale": "소",
+        "gender": "F",
+        "age": 27,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 24789,
+        "width": 600,
+        "height": 600,
+        "img_path": "REAL/L1_2/L2_5/L3_37/r_0037_24789.jpg",
+        "img_bbox": "[35,47,526,512]",
+        "ctg_id": "0037"
+    },
+    "category": {
+        "ctg_id": "0037",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "서큘레이터"
+    }
+}

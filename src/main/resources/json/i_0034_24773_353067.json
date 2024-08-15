@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 24773,
+        "abs_no": 353067,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 700,
+        "abs_height": 700,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_34/i_0034_24773_353067.jpg",
+        "abs_bbox": "[36.08887227376302,152.46388117472333,633.5,393.1666666666667]",
+        "object_scale": "중",
+        "gender": "F",
+        "age": 21,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 24773,
+        "width": 1200,
+        "height": 735,
+        "img_path": "REAL/L1_2/L2_5/L3_34/r_0034_24773.jpg",
+        "img_bbox": "[50.23255813953489,53.02325581395349,1095.3488372093022,611.1627906976744]",
+        "ctg_id": "0034"
+    },
+    "category": {
+        "ctg_id": "0034",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "천장형 선풍기"
+    }
+}

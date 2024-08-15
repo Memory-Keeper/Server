@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 21,
+        "abs_no": 143492,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 2480,
+        "abs_height": 3508,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_35/i_0035_21_143492.jpg",
+        "abs_bbox": "[600.813515625,754.6767708333333,1140.1000000000001,1900.1666666666667]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 36,
+        "proficiency": "중"
+    },
+    "real_image": {
+        "img_no": 21,
+        "width": 1200,
+        "height": 1600,
+        "img_path": "REAL/L1_2/L2_5/L3_35/r_0035_21.jpg",
+        "img_bbox": "[216.00000000000003,178.66666666666666,714.6666666666667,1256]",
+        "ctg_id": "0035"
+    },
+    "category": {
+        "ctg_id": "0035",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "전기히터"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 24772,
+        "abs_no": 607952,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 1200,
+        "abs_height": 1200,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_30/i_0030_24772_607952.jpg",
+        "abs_bbox": "[196,245.34375,808,658]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 26,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 24772,
+        "width": 1024,
+        "height": 683,
+        "img_path": "REAL/L1_2/L2_5/L3_30/r_0030_24772.jpg",
+        "img_bbox": "[88.11162790697674,3.572093023255814,819.2,666.7906976744187]",
+        "ctg_id": "0030"
+    },
+    "category": {
+        "ctg_id": "0030",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "잔디깎이"
+    }
+}

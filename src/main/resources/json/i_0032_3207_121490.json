@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 3207,
+        "abs_no": 121490,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 300,
+        "abs_height": 300,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_32/i_0032_3207_121490.jpg",
+        "abs_bbox": "[44,35.25,199,240]",
+        "object_scale": "소",
+        "gender": "F",
+        "age": 47,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 3207,
+        "width": 500,
+        "height": 504,
+        "img_path": "REAL/L1_2/L2_5/L3_32/r_0032_3207.jpg",
+        "img_bbox": "[112,15,296,468]",
+        "ctg_id": "0032"
+    },
+    "category": {
+        "ctg_id": "0032",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "제습기"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 3327,
+        "abs_no": 157552,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 2480,
+        "abs_height": 3508,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_36/i_0036_3327_157552.jpg",
+        "abs_bbox": "[116.93333333333335,240.59034225463867,2286.046666666667,2999.34]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 25,
+        "proficiency": "상"
+    },
+    "real_image": {
+        "img_no": 3327,
+        "width": 374,
+        "height": 500,
+        "img_path": "REAL/L1_2/L2_5/L3_36/r_0036_3327.jpg",
+        "img_bbox": "[59.16666666666667,19.166665871938072,306.6666666666667,410.83333333333337]",
+        "ctg_id": "0036"
+    },
+    "category": {
+        "ctg_id": "0036",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "라디에이터"
+    }
+}

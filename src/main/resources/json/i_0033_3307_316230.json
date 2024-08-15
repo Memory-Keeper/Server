@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 3307,
+        "abs_no": 316230,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 300,
+        "abs_height": 300,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_33/i_0033_3307_316230.jpg",
+        "abs_bbox": "[56.920135498046875,20.829856872558594,187,265.1701431274414]",
+        "object_scale": "소",
+        "gender": "F",
+        "age": 27,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 3307,
+        "width": 500,
+        "height": 375,
+        "img_path": "REAL/L1_2/L2_5/L3_33/r_0033_3307.jpg",
+        "img_bbox": "[125,7.999999046325684,274,361]",
+        "ctg_id": "0033"
+    },
+    "category": {
+        "ctg_id": "0033",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "스탠드형 선풍기"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 3187,
+        "abs_no": 154518,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 2480,
+        "abs_height": 3508,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_31/i_0031_3187_154518.jpg",
+        "abs_bbox": "[245.56000000000003,439.96166666666664,2122.34,2362.0533333333333]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 22,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 3187,
+        "width": 1814,
+        "height": 3226,
+        "img_path": "REAL/L1_2/L2_5/L3_31/r_0031_3187.jpg",
+        "img_bbox": "[43.013333333333335,908.6566666666668,1704.4033333333334,2150.666666666667]",
+        "ctg_id": "0031"
+    },
+    "category": {
+        "ctg_id": "0031",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "가습기"
+    }
+}

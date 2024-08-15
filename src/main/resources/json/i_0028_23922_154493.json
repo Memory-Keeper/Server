@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 23922,
+        "abs_no": 154493,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 2480,
+        "abs_height": 3508,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_28/i_0028_23922_154493.jpg",
+        "abs_bbox": "[730.8333333333335,165.16833333333332,1116.7133333333336,2888.2533333333336]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 22,
+        "proficiency": "하"
+    },
+    "real_image": {
+        "img_no": 23922,
+        "width": 778,
+        "height": 1024,
+        "img_path": "REAL/L1_2/L2_5/L3_28/r_0028_23922.jpg",
+        "img_bbox": "[551.20953125,146.72957194010417,208.21333333333334,800.4266666666667]",
+        "ctg_id": "0028"
+    },
+    "category": {
+        "ctg_id": "0028",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "스탠드에어컨"
+    }
+}

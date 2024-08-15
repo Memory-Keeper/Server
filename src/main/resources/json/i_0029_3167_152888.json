@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 3167,
+        "abs_no": 152888,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 3508,
+        "abs_height": 2480,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_29/i_0029_3167_152888.jpg",
+        "abs_bbox": "[350.8,434.115,2905.7933333333335,1841.7]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 23,
+        "proficiency": "상"
+    },
+    "real_image": {
+        "img_no": 3167,
+        "width": 640,
+        "height": 480,
+        "img_path": "REAL/L1_2/L2_5/L3_29/r_0029_3167.jpg",
+        "img_bbox": "[59,59,561,375]",
+        "ctg_id": "0029"
+    },
+    "category": {
+        "ctg_id": "0029",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "벽걸이에어컨"
+    }
+}

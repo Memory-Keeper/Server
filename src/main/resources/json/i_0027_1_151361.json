@@ -1,0 +1,29 @@
+{
+    "abstract_image": {
+        "img_no": 1,
+        "abs_no": 151361,
+        "abs_domain": "ILLUSTRATION",
+        "abs_width": 2480,
+        "abs_height": 3508,
+        "abs_path": "ABSTRACT_ILLUSTRATION/L1_2/L2_5/L3_27/i_0027_1_151361.jpg",
+        "abs_bbox": "[777.6066666666668,609.515,982.2400000000001,2286.0466666666666]",
+        "object_scale": "대",
+        "gender": "F",
+        "age": 30,
+        "proficiency": "중"
+    },
+    "real_image": {
+        "img_no": 1,
+        "width": 563,
+        "height": 750,
+        "img_path": "REAL/L1_2/L2_5/L3_27/r_0027_1.jpg",
+        "img_bbox": "[183.75,130,217.5,571.25]",
+        "ctg_id": "0027"
+    },
+    "category": {
+        "ctg_id": "0027",
+        "ctg_nm_level1": "가전/디지털",
+        "ctg_nm_level2": "계절가전",
+        "ctg_nm_level3": "공기청정기"
+    }
+}
