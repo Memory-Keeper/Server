@@ -5,6 +5,7 @@ import com.memorykeeper.memory_keeper.model.CognitiveTrainingResult;
 import java.util.List;
 
 public interface CognitiveTrainingResultRepository extends JpaRepository<CognitiveTrainingResult, Long> {
-    List<CognitiveTrainingResult> findByUsername(String username);
+    List<CognitiveTrainingResult> findByUserId(Long userId);
 }
+
 

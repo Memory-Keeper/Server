@@ -13,11 +13,10 @@ public class DementiaTestResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId; // 사용자 ID 추가
     private String username;
     private int score;
     private boolean isDementiaSuspected;
-
-    // 새 필드 추가
     private int testAttempt; // 시행 회차
     private LocalDate testDate; // 시행 날짜
 
@@ -28,6 +27,14 @@ public class DementiaTestResult {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -70,3 +77,4 @@ public class DementiaTestResult {
         this.testDate = testDate;
     }
 }
+

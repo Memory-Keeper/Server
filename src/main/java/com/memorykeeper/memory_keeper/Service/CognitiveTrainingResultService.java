@@ -1,7 +1,9 @@
 package com.memorykeeper.memory_keeper.Service;
 
 import com.memorykeeper.memory_keeper.model.CognitiveTrainingResult;
+import com.memorykeeper.memory_keeper.model.User;
 import com.memorykeeper.memory_keeper.repository.CognitiveTrainingResultRepository;
+import com.memorykeeper.memory_keeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,20 @@ public class CognitiveTrainingResultService {
     @Autowired
     private CognitiveTrainingResultRepository cognitiveTrainingResultRepository;
 
-    public CognitiveTrainingResult saveQuizResult(String username, int memoryScore, int languageScore, int spatialAbilityScore, int executiveFunctionScore, int attentionScore, int orientationScore) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public CognitiveTrainingResult saveQuizResult(Long userId, int memoryScore, int languageScore, int spatialAbilityScore, int executiveFunctionScore, int attentionScore, int orientationScore) {
         int totalScore = memoryScore + languageScore + spatialAbilityScore + executiveFunctionScore + attentionScore + orientationScore;
         double percentile = calculatePercentile(totalScore);
 
-        // 기존에 저장된 시행 회차를 조회하여 다음 회차 번호를 설정
-        int quizAttempt = getNextQuizAttempt(username);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        int quizAttempt = getNextQuizAttempt(userId);
 
         CognitiveTrainingResult result = new CognitiveTrainingResult();
-        result.setUsername(username);
+        result.setUserId(userId);
+        result.setUsername(user.getUsername()); // 필요에 따라 사용
         result.setMemoryScore(memoryScore);
         result.setLanguageScore(languageScore);
         result.setSpatialAbilityScore(spatialAbilityScore);
@@ -37,12 +44,12 @@ public class CognitiveTrainingResultService {
         return cognitiveTrainingResultRepository.save(result);
     }
 
-    public List<CognitiveTrainingResult> getQuizResultsByUsername(String username) {
-        return cognitiveTrainingResultRepository.findByUsername(username);
+    public List<CognitiveTrainingResult> getQuizResultsByUserId(Long userId) {
+        return cognitiveTrainingResultRepository.findByUserId(userId);
     }
 
-    private int getNextQuizAttempt(String username) {
-        List<CognitiveTrainingResult> userResults = cognitiveTrainingResultRepository.findByUsername(username);
+    private int getNextQuizAttempt(Long userId) {
+        List<CognitiveTrainingResult> userResults = cognitiveTrainingResultRepository.findByUserId(userId);
         return userResults.size() + 1;
     }
 
@@ -61,4 +68,5 @@ public class CognitiveTrainingResultService {
         return (double) rank / totalUsers * 100;
     }
 }
+
 

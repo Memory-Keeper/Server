@@ -13,6 +13,7 @@ public class CognitiveTrainingResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId; // userId 추가
     private String username;
     private int memoryScore;
     private int languageScore;
@@ -32,6 +33,14 @@ public class CognitiveTrainingResult {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -122,4 +131,5 @@ public class CognitiveTrainingResult {
         this.quizDate = quizDate;
     }
 }
+
 

@@ -17,7 +17,7 @@ public class CognitiveTrainingController {
 
     @PostMapping("/submit")
     public ResponseEntity<CognitiveTrainingResult> submitQuizResult(
-            @RequestParam String username,
+            @RequestParam Long userId,
             @RequestParam int memoryScore,
             @RequestParam int languageScore,
             @RequestParam int spatialAbilityScore,
@@ -25,15 +25,16 @@ public class CognitiveTrainingController {
             @RequestParam int attentionScore,
             @RequestParam int orientationScore
     ) {
-        CognitiveTrainingResult savedResult = cognitiveTrainingResultService.saveQuizResult(username, memoryScore, languageScore, spatialAbilityScore, executiveFunctionScore, attentionScore, orientationScore);
+        CognitiveTrainingResult savedResult = cognitiveTrainingResultService.saveQuizResult(userId, memoryScore, languageScore, spatialAbilityScore, executiveFunctionScore, attentionScore, orientationScore);
         return ResponseEntity.ok(savedResult);
     }
 
-    @GetMapping("/user/{username}")
-    public ResponseEntity<List<CognitiveTrainingResult>> getQuizResultsByUsername(@PathVariable String username) {
-        List<CognitiveTrainingResult> results = cognitiveTrainingResultService.getQuizResultsByUsername(username);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CognitiveTrainingResult>> getQuizResultsByUserId(@PathVariable Long userId) {
+        List<CognitiveTrainingResult> results = cognitiveTrainingResultService.getQuizResultsByUserId(userId);
         return ResponseEntity.ok(results);
     }
 }
+
 
 

@@ -16,15 +16,17 @@ public class DementiaTestResultController {
     private DementiaTestResultService dementiaTestResultService;
 
     @PostMapping("/save")
-    public ResponseEntity<DementiaTestResult> saveTestResult(@RequestParam String username, @RequestParam int score) {
-        DementiaTestResult savedResult = dementiaTestResultService.saveTestResult(username, score);
+    public ResponseEntity<DementiaTestResult> saveTestResult(@RequestParam Long userId, @RequestParam int score) {
+        DementiaTestResult savedResult = dementiaTestResultService.saveTestResult(userId, score);
         return ResponseEntity.ok(savedResult);
     }
 
-    @GetMapping("/user/{username}")
-    public ResponseEntity<List<DementiaTestResult>> getTestResultsByUsername(@PathVariable String username) {
-        List<DementiaTestResult> results = dementiaTestResultService.getTestResultsByUsername(username);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<DementiaTestResult>> getTestResultsByUserId(@PathVariable Long userId) {
+        List<DementiaTestResult> results = dementiaTestResultService.getTestResultsByUserId(userId);
         return ResponseEntity.ok(results);
     }
 }
+
+
 

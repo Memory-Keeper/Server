@@ -1,7 +1,9 @@
 package com.memorykeeper.memory_keeper.Service;
 
 import com.memorykeeper.memory_keeper.model.DementiaTestResult;
+import com.memorykeeper.memory_keeper.model.User;
 import com.memorykeeper.memory_keeper.repository.DementiaTestResultRepository;
+import com.memorykeeper.memory_keeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +16,19 @@ public class DementiaTestResultService {
     @Autowired
     private DementiaTestResultRepository dementiaTestResultRepository;
 
-    public DementiaTestResult saveTestResult(String username, int score) {
-        // 점수가 6점 이상이면 치매 의심으로 설정
+    @Autowired
+    private UserRepository userRepository;
+
+    public DementiaTestResult saveTestResult(Long userId, int score) {
         boolean isDementiaSuspected = score >= 6;
 
-        // 기존에 저장된 시행 회차를 조회하여 다음 회차 번호를 설정
-        int testAttempt = getNextTestAttempt(username);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        int testAttempt = getNextTestAttempt(userId);
 
         DementiaTestResult testResult = new DementiaTestResult();
-        testResult.setUsername(username);
+        testResult.setUserId(userId);
+        testResult.setUsername(user.getUsername()); // 필요에 따라 사용
         testResult.setScore(score);
         testResult.setDementiaSuspected(isDementiaSuspected);
         testResult.setTestAttempt(testAttempt);
@@ -31,13 +37,15 @@ public class DementiaTestResultService {
         return dementiaTestResultRepository.save(testResult);
     }
 
-    public List<DementiaTestResult> getTestResultsByUsername(String username) {
-        return dementiaTestResultRepository.findByUsername(username);
+    public List<DementiaTestResult> getTestResultsByUserId(Long userId) {
+        return dementiaTestResultRepository.findByUserId(userId);
     }
 
-    private int getNextTestAttempt(String username) {
-        List<DementiaTestResult> userResults = dementiaTestResultRepository.findByUsername(username);
+    private int getNextTestAttempt(Long userId) {
+        List<DementiaTestResult> userResults = dementiaTestResultRepository.findByUserId(userId);
         return userResults.size() + 1;
     }
 }
+
+
 
