@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -79,6 +80,12 @@ public class FileUploadController {
         // Generate a random file name
         String randomFileName = UUID.randomUUID().toString() + "." + ALLOWED_EXTENSION;
 
+        // Check if the user has already uploaded a file with the same stored file name
+        Optional<UserFile> existingFile = userFileRepository.findByUserAndStoredFileName(user, randomFileName);
+        if (existingFile.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("A file with the same name has already been uploaded.");
+        }
+
         // Ensure the directory exists
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
@@ -120,7 +127,8 @@ public class FileUploadController {
             }
             User user = userOptional.get();
 
-            Optional<UserFile> userFileOptional = userFileRepository.findByUserAndOriginalFileName(user, fileName);
+            // 저장된 파일 이름을 기준으로 검색
+            Optional<UserFile> userFileOptional = userFileRepository.findByUserAndStoredFileName(user, fileName);
             if (userFileOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
@@ -133,12 +141,16 @@ public class FileUploadController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
+            // Content-Type 헤더를 설정하여 이미지로 반환
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .contentType(MediaType.IMAGE_JPEG)  // Content-Type을 image/jpeg로 설정
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + userFile.getOriginalFileName() + "\"")
                     .body(resource);
         } catch (MalformedURLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
+
+
 

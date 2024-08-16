@@ -40,6 +40,13 @@ public class FileService {
         // 파일명 생성
         String originalFileName = file.getOriginalFilename();
         String storedFileName = UUID.randomUUID().toString() + ".jpg";
+
+        // 중복된 storedFileName 방지
+        Optional<UserFile> existingFile = userFileRepository.findByUserAndStoredFileName(user, storedFileName);
+        if (existingFile.isPresent()) {
+            throw new IllegalArgumentException("A file with the same stored name already exists.");
+        }
+
         String filePath = uploadDir + "/" + storedFileName;
 
         // 파일 저장
@@ -62,12 +69,13 @@ public class FileService {
         userFileRepository.save(userFile);
     }
 
-    public Optional<UserFile> getFile(Long userId, String originalFileName) {
+    public Optional<UserFile> getFile(Long userId, String storedFileName) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             return Optional.empty();
         }
-        return userFileRepository.findByUserAndOriginalFileName(userOptional.get(), originalFileName);
+        return userFileRepository.findByUserAndStoredFileName(userOptional.get(), storedFileName);
     }
 }
+
 
