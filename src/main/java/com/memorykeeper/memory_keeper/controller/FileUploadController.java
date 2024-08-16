@@ -4,6 +4,7 @@ import com.memorykeeper.memory_keeper.model.User;
 import com.memorykeeper.memory_keeper.model.UserFile;
 import com.memorykeeper.memory_keeper.repository.UserFileRepository;
 import com.memorykeeper.memory_keeper.repository.UserRepository;
+import com.memorykeeper.memory_keeper.model.FileBlobResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -101,8 +102,9 @@ public class FileUploadController {
 
         return ResponseEntity.ok("File uploaded successfully with name: " + randomFileName);
     }
+
     @GetMapping("/list")
-    public ResponseEntity<List<String>> listUserFiles() {
+    public ResponseEntity<List<FileBlobResponse>> listUserFiles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -117,13 +119,21 @@ public class FileUploadController {
 
         // 사용자 파일 목록 조회
         List<UserFile> userFiles = userFileRepository.findByUser(user);
-        List<String> filePaths = userFiles.stream()
-                .map(UserFile::getFilePath)
-                .collect(Collectors.toList());
+        List<FileBlobResponse> fileBlobResponses = userFiles.stream().map(userFile -> {
+            Path filePath = Paths.get(userFile.getFilePath());
+            byte[] fileData = null;
+            try {
+                fileData = Files.readAllBytes(filePath);  // Read file data as byte array
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), fileData);
+        }).collect(Collectors.toList());
 
-        return ResponseEntity.ok(filePaths);
+        return ResponseEntity.ok(fileBlobResponses);
     }
 }
+
 
 
 
