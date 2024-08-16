@@ -6,27 +6,23 @@ import com.memorykeeper.memory_keeper.repository.UserFileRepository;
 import com.memorykeeper.memory_keeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/files")
@@ -41,7 +37,7 @@ public class FileUploadController {
     @Autowired
     private UserRepository userRepository;
 
-    private static final long MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+    private static final long MAX_FILE_SIZE = 1024 * 1024; // 1MB
     private static final String ALLOWED_EXTENSION = "jpg";
     private static final String ALLOWED_MIME_TYPE = "image/jpeg";
 
@@ -78,13 +74,7 @@ public class FileUploadController {
         }
 
         // Generate a random file name
-        String randomFileName = UUID.randomUUID().toString() + "." + ALLOWED_EXTENSION;
-
-        // Check if the user has already uploaded a file with the same stored file name
-        Optional<UserFile> existingFile = userFileRepository.findByUserAndStoredFileName(user, randomFileName);
-        if (existingFile.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("A file with the same name has already been uploaded.");
-        }
+        String randomFileName = UUID.randomUUID() + "." + ALLOWED_EXTENSION;
 
         // Ensure the directory exists
         Path uploadPath = Paths.get(uploadDir);
@@ -111,44 +101,27 @@ public class FileUploadController {
 
         return ResponseEntity.ok("File uploaded successfully with name: " + randomFileName);
     }
-
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletResponse response) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-
-            String username = authentication.getName();
-            Optional<User> userOptional = userRepository.findByUsername(username);
-            if (userOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
-            User user = userOptional.get();
-
-            // 저장된 파일 이름을 기준으로 검색
-            Optional<UserFile> userFileOptional = userFileRepository.findByUserAndStoredFileName(user, fileName);
-            if (userFileOptional.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-
-            UserFile userFile = userFileOptional.get();
-            Path filePath = Paths.get(userFile.getFilePath()).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-
-            if (!resource.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-
-            // Content-Type 헤더를 설정하여 이미지로 반환
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)  // Content-Type을 image/jpeg로 설정
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + userFile.getOriginalFileName() + "\"")
-                    .body(resource);
-        } catch (MalformedURLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    @GetMapping("/list")
+    public ResponseEntity<List<String>> listUserFiles() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+
+        String username = authentication.getName();
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        User user = userOptional.get();
+
+        // 사용자 파일 목록 조회
+        List<UserFile> userFiles = userFileRepository.findByUser(user);
+        List<String> filePaths = userFiles.stream()
+                .map(UserFile::getFilePath)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(filePaths);
     }
 }
 
