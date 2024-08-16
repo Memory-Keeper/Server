@@ -16,10 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -108,35 +105,39 @@ public class FileUploadController {
     public ResponseEntity<List<FileBlobResponse>> listUserFiles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>()); // 빈 배열 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
         }
 
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>()); // 빈 배열 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
         }
         User user = userOptional.get();
 
         // 사용자 파일 목록 조회
         List<UserFile> userFiles = userFileRepository.findByUser(user);
         if (userFiles.isEmpty()) {
-            return ResponseEntity.ok(new ArrayList<>()); // 빈 배열 반환
+            return ResponseEntity.ok(new ArrayList<>());
         }
 
         List<FileBlobResponse> fileBlobResponses = userFiles.stream().map(userFile -> {
             Path filePath = Paths.get(userFile.getFilePath());
             byte[] fileData = null;
             try {
-                fileData = Files.readAllBytes(filePath);  // Read file data as byte array
+                fileData = Files.readAllBytes(filePath);  // 파일 데이터를 바이트 배열로 읽기
+            } catch (NoSuchFileException e) {
+                // 파일이 존재하지 않을 경우 처리 - 빈 파일 응답 생성
+                return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), fileData);
-        }).collect(Collectors.toList());
+        }).filter(response -> response.getFileData() != null).collect(Collectors.toList()); // 파일 데이터가 없는 경우 필터링
 
         return ResponseEntity.ok(fileBlobResponses);
     }
+
 }
 
 
