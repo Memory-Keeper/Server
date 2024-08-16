@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/files")
@@ -125,19 +126,24 @@ public class FileUploadController {
             Path filePath = Paths.get(userFile.getFilePath());
             byte[] fileData = null;
             try {
-                fileData = Files.readAllBytes(filePath);  // 파일 데이터를 바이트 배열로 읽기
-            } catch (NoSuchFileException e) {
-                // 파일이 존재하지 않을 경우 처리 - 빈 파일 응답 생성
-                return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), null);
+                if (Files.exists(filePath)) { // 파일이 존재하는지 확인
+                    fileData = Files.readAllBytes(filePath);  // 파일 데이터를 바이트 배열로 읽기
+                } else {
+                    System.err.println("File not found: " + userFile.getFilePath());
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), fileData);
-        }).filter(response -> response.getFileData() != null).collect(Collectors.toList()); // 파일 데이터가 없는 경우 필터링
+
+            if (fileData != null) {
+                return new FileBlobResponse(userFile.getOriginalFileName(), userFile.getStoredFileName(), fileData);
+            } else {
+                return null; // 파일 데이터를 읽을 수 없는 경우 null 반환
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList()); // null인 항목 제거
 
         return ResponseEntity.ok(fileBlobResponses);
     }
-
 }
 
 
