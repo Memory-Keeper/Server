@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -107,18 +108,22 @@ public class FileUploadController {
     public ResponseEntity<List<FileBlobResponse>> listUserFiles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>()); // 빈 배열 반환
         }
 
         String username = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>()); // 빈 배열 반환
         }
         User user = userOptional.get();
 
         // 사용자 파일 목록 조회
         List<UserFile> userFiles = userFileRepository.findByUser(user);
+        if (userFiles.isEmpty()) {
+            return ResponseEntity.ok(new ArrayList<>()); // 빈 배열 반환
+        }
+
         List<FileBlobResponse> fileBlobResponses = userFiles.stream().map(userFile -> {
             Path filePath = Paths.get(userFile.getFilePath());
             byte[] fileData = null;
