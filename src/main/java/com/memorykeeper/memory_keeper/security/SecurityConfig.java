@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -39,6 +40,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
+                .headers(headers -> headers
+                        .addHeaderWriter(new StaticHeadersWriter("X-Content-Type-Options", "nosniff")) // 헤더 추가
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 "/generate-cognitive-quiz-from-json",
