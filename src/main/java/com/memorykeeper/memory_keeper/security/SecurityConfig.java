@@ -45,20 +45,13 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
-                                "/generate-cognitive-quiz-from-json",
                                 "/api/users/send-verification-code",
                                 "/api/users/verify-code",
                                 "/api/users/register",
                                 "/api/users/reset-password-request",
                                 "/api/users/reset-password",
                                 "/api/users/find-username-request",
-                                "/api/users/find-username",
-                                "/api/dementia-test-results/save", // 치매 자가진단 테스트 결과 저장 엔드포인트
-                                "/api/dementia-test-results/user/**", // 사용자별 자가진단 테스트 조회
-                                "/api/cognitive-training/submit", // 퀴즈 결과 저장 엔드포인트
-                                "/api/cognitive-training/user/**", // 사용자별 퀴즈 결과 조회 엔드포인트 추가
-                                "/api/dementia-centers/fetch-and-save", // 치매센터 데이터 수집 엔드포인트
-                                "/api/users/{userId}/dementia-centers" // 사용자별 치매센터 리스트 조회
+                                "/api/users/find-username"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
